@@ -21,14 +21,37 @@ yum install autossh
 # debain
 apt-get install autossh
 ```
+#Ubuntu
+sudo apt-get install autossh
 
 如果以上方法无法安装，则请直接到[autossh官网](http://www.harding.motd.ca/autossh/)，下载源码并进行安装.
 
 #### 2. 安装map2cloud
 ```bash
-sudo curl https://raw.githubusercontent.com/smallmuou/map2cloud/master/map2cloud > /usr/local/bin/map2cloud
+git clone https://github.com/yangwei1987/map2cloud.git
+
+cd map2cloud 
+cp map2cloud map2cloud
 sudo chmod +x /usr/local/bin/map2cloud
 ```
+
+#### 3. 免密登录
+6.1 ssh每次重连都需要键入密码，故在此首先设置免密码登陆到内网
+
+在内网的机器A上面执行：
+
+ssh-copy-id 外网用户名@外网IP 
+
+按照之前我设定的端口，这个指令就是如下
+
+ssh-copy-id root@123.123.123.123
+
+那以后这台内网的A机器ssh登陆我外网的B机器就可以免密码登陆啦~
+检验是否已经可以使用免密码登陆可以使用如下指令来检验：
+
+ssh root@123.123.123.123
+
+
 
 #### 3. 生成rsa密钥
 请使用ssh-keygen生成密钥对
@@ -91,7 +114,10 @@ OPTIONS:
 * 映射本机ssh服务端口22至云端22222
 
 ```bash
-map2cloud -i /root/.ssh/id_rsa -p 22 -n rssh root@your-cloud-ip 22 22222
+map2cloud -i #私钥路径# -p 22 -n rssh root@your-cloud-ip 22 22222
+根据返回文件
+systemctl start/stop/restart/status rssh
+或者
 /etc/init.d/rssh start
 ```
 PS：这样我执行要执行`ssh -p 22222 user@your-cloud-ip`，就可以访问本地主机
